@@ -3,3 +3,9 @@ import pandas as pd
 read_file = pd.read_csv (r'/content/Hamshahri-Corpus.txt',  sep=' ', engine='python')
 read_file.to_csv (r'/content/Hamshahri-Corpus-homework.csv', index=None)
 !head -n100 '/content/Hamshahri-Corpus-homework.csv'
+
+row = [""]
+with open('Hamshahri-Corpus', 'r', encoding='utf-8') as hCorpus:
+        for line in hCorpus:
+            if (line.startswith('.DID')):
+              
