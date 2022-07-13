@@ -12,7 +12,7 @@ news_did = []
 news_body = ""
 is_first_did = True
 with open('Hamshahri-Sample.txt', 'r', encoding='utf-8') as hCorpus:
-    count = 0;
+    count = 0
     for line in hCorpus:
         line = line.replace('\t', ',')
         new_line = ""
