@@ -9,13 +9,7 @@ with open('PersianStopWords.txt', 'r', encoding='utf-8')as stopWordsList:
             stopwords.append(word)
 
 
-persian_alphabet = ['ا', 'ب', 'پ', 'ت', 'ث', 'ج', 'چ', 'ح', 'خ', 'د', 'ذ', 'ر',
-                    'ز', 'ژ', 'س', 'ش', 'ص', 'ض', 'ط',
-                    'ظ', 'ع', 'غ', 'ف', 'ق', 'ک', 'گ', 'ل', 'م', 'ن', 'و', 'ه', 'ی']
 
-english_alphabet = ('a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l',
-                    'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x',
-                    'y', 'z')
 full_body_news = []
 news_category = []
 news_date = []
@@ -44,10 +38,7 @@ with open('Hamshahri-Sample.txt', 'r', encoding='utf-8') as hCorpus:
             new_line = new_line.split(',')
             news_category.append(new_line[1])
         elif line.startswith('.Date'):
-            new_line = line.replace('\t', ',')
-            new_line = new_line.replace('\n', '')
-            new_line = new_line.split(',')
-            news_date.append(new_line[1])
+            continue
         else:
             news_body_temp = ''
             news_body_temp += line.strip()
@@ -56,8 +47,7 @@ with open('Hamshahri-Sample.txt', 'r', encoding='utf-8') as hCorpus:
                     news_body_temp = news_body_temp.replace(word, '')
 
             news_body += news_body_temp
-
-            news_cat_body_list = list(zip(news_category, full_body_news))
+news_cat_body_list = list(zip(news_category, full_body_news))
 
 
 # because of dealing with non-ASCII characters, we need to specify the character encoding in the open() function
@@ -67,10 +57,27 @@ with open('Hamshahri_Corpus.csv', 'w', encoding='utf-8')as hCorpusCSV:
     writer.writerow(news_cat_body_list)
 
 
-#
-# features = pd.read_csv('Hamshahri_Corpus.csv')
-# # One-hot encode the data using pandas get_dummies
-# features = pd.get_dummies(features)
-# train_features, test_features, train_labels, test_labels = train_test_split(features, labels, test_size = 0.25, random_state = 42)
-# # print(test)
-# print(train)
+news_category_list = []
+with open('Hamshahri-Categories.txt','r', encoding='utf-8')as hCats:
+    for line in hCats:
+        for word in line.split(' '):
+            if word not in news_category_list and word != '\n' and word != '':
+                news_category_list.append(word)
+
+tokens = []
+
+
+def tokenize_corpus(corpus):
+    for line in full_body_news:
+        for word in line.split(' '):
+            if len(word) > 1:
+                if word not in stopwords:
+                    tokens.append(word)
+
+    return tokens
+
+tokenized_corpus = tokenize_corpus(full_body_news)
+vocabulary = []
+for word in tokenized_corpus:
+    if word not in vocabulary and word is not '':
+        vocabulary.append(word)
